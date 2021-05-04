@@ -1,4 +1,4 @@
-﻿A novel DRO model with CVaR for self-scheduling problem
+﻿A novel DRO model for self-scheduling problem
 ================
 
 What about this project/study?
