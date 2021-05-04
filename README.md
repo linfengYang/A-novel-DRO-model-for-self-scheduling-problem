@@ -25,40 +25,23 @@ What about this project/study?
 User Guide
 -----------
 
-The description of folder 
-
-    SCUC_dat : The numerical case studies data. 
-
-    Picture : The figures and tables in this paper. 数据结果图表。
-
-
-
-
 The description of implement code files  (函数文件说明)
 
-    DCOPF_ADMM.m : The main funciton.  主函数。
-
-    ReadDataSCUC :  Read the SCUC6.txt and SCUC1062.txt.  SCUC6.txt和SCUC1062.txt的读取函数。
-
-    ReadDataDCDOPF : Read the DDOPF118.txt和RTS48.txt.  DDOPF118.txt和RTS48.txt的读取函数。
-
-    SCUC_nodeY :  Construct network admittance matrix. 形成导纳矩阵的函数。
-
-    partitionNode :  Set the partition of the system. 设置分区的函数。
-
-    partitionDataPI :  The procedure of identifying "real" coupling boudnary branches and brandary buses. 识别耦合节点和耦合支路的函数。
-
-    formMatrixA :  Corresponding to the constraint (17) in manuscript. 构造文章中约束(17)的系数矩阵。
-
-    formMatrixM :  Corresponding to the constraint (18) in manuscript. 构造文章中约束(18)的系数矩阵。
-
-    formQC4Emission : Corresponding to the constraint (19) in manuscript.  构造文章中约束(19)的系数矩阵。
-
-    yanZheng :  Using Cplex to solve DC-DOPF-CET problem. 使用Cplex求解DC-DOPF-CET。
-
-    formQCP_PI_x_i : Corresponding to the constraint (30) in manuscript. 构造文章中约束(30)的系数矩阵。
-
-
+    DRO_CVaR_Alg1 : The DRO model.  
+    
+    RO_CVaR : The RO model.
+    
+    Approximation1_of_DRO_CVaR : The APP1 model.
+    
+    Approximation2_of_DRO_CVaR : The APP1 mode2.
+    
+    ReadDataSCUC :  Read the data.
+    
+    SCUC_nodeY :  Construct network admittance matrix.
+    
+    MonteCarlo_Price : Calculate price of electricity.
+    
+    portion : Divide the area.
 
 
 
