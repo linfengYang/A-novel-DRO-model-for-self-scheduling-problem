@@ -39,9 +39,13 @@ The description of implement code files  (函数文件说明)
     
     SCUC_nodeY :  Construct network admittance matrix.
     
-    MonteCarlo_Price : Calculate price of electricity.
+    acquire_lamda : Calculate price of electricity.
+    
+    MonteCarlo_Price : Generating fluctuating electricity price.
     
     portion : Divide the area.
+    
+    SCUC_X_Y ：IEEE X-bus Y-periods test system.
 
 
 
