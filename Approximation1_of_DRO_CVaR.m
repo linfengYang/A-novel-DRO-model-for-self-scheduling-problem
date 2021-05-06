@@ -15,29 +15,29 @@ L = 4;
  
 load 'lamda_q_30N24T';
 
-T = SCUC_data.totalLoad.T;  % Ê±¶ÎÊıT
-G = SCUC_data.units.N;      % ·¢µç»úÊı
-N = SCUC_data.baseparameters.busN;  % ½Úµã×ÜÊı
+T = SCUC_data.totalLoad.T;  % æ—¶æ®µæ•°T
+G = SCUC_data.units.N;      % å‘ç”µæœºæ•°
+N = SCUC_data.baseparameters.busN;  % èŠ‚ç‚¹æ€»æ•°
 
-all_branch.I = [ SCUC_data.branch.I; SCUC_data.branchTransformer.I ]; %ËùÓĞÖ§Â·Æğµã Ç°ÊÇÖ§Â·Æğµã ºóÊÇ±äÑ¹Æ÷Ö§Â·Æğµã
-all_branch.J = [ SCUC_data.branch.J; SCUC_data.branchTransformer.J ]; %ËùÓĞÖ§Â·ÖÕµã
-all_branch.P = [ SCUC_data.branch.P; SCUC_data.branchTransformer.P ]; %Ö§Â·¹¦ÂÊÉÏÏŞ
+all_branch.I = [ SCUC_data.branch.I; SCUC_data.branchTransformer.I ]; %æ‰€æœ‰æ”¯è·¯èµ·ç‚¹ å‰æ˜¯æ”¯è·¯èµ·ç‚¹ åæ˜¯å˜å‹å™¨æ”¯è·¯èµ·ç‚¹
+all_branch.J = [ SCUC_data.branch.J; SCUC_data.branchTransformer.J ]; %æ‰€æœ‰æ”¯è·¯ç»ˆç‚¹
+all_branch.P = [ SCUC_data.branch.P; SCUC_data.branchTransformer.P ]; %æ”¯è·¯åŠŸç‡ä¸Šé™
 
 beta_CVaR = 0.99;
 
-% ĞÎ³ÉÖ±Á÷³±Á÷ÏµÊı¾ØÕóB
+% å½¢æˆç›´æµæ½®æµç³»æ•°çŸ©é˜µB
 type_of_pf = 'DC';
 Y = SCUC_nodeY(SCUC_data,type_of_pf);
-B = -Y.B; %ÒòÎªÊÇÖ±Á÷·½³Ì ËùÒÔBºöÂÔÁËµç×è Ö»¿¼ÂÇµç¿¹
+B = -Y.B; %å› ä¸ºæ˜¯ç›´æµæ–¹ç¨‹ æ‰€ä»¥Bå¿½ç•¥äº†ç”µé˜» åªè€ƒè™‘ç”µæŠ—
 
-% ¶¨ÒåÒ»Ğ©·½±ãÓÃµÄ³£Á¿
-diag_E_T = sparse(1:T,1:T,1); %T*TµÄ¶Ô½ÇÕó£¬¶Ô½ÇÏßÈ«1
+% å®šä¹‰ä¸€äº›æ–¹ä¾¿ç”¨çš„å¸¸é‡
+diag_E_T = sparse(1:T,1:T,1); %T*Tçš„å¯¹è§’é˜µï¼Œå¯¹è§’çº¿å…¨1
 low_trianle = diag_E_T(2:T,:) - diag_E_T(1:T-1,:); 
 
-% ¶¨Òå±äÁ¿y                               
-for i=1:N    % Öğ ¸ö ´¦ÀíÃ¿¸ö½Úµã   
-    if ismember(i, SCUC_data.units.bus_G)    % Èç¹ûÊÇ·¢µç»ú½Úµã ¾ö²ß±äÁ¿°üÀ¨ ¹¦ÂÊ£¬Ïà½Ç£¬¹¦ÂÊÔ¼Êøz
-        y{i}.PG = sdpvar(T,1); %sdpvar´´½¨ÊµÊıĞÍ¾ö²ß±äÁ¿
+% å®šä¹‰å˜é‡y                               
+for i=1:N    % é€ ä¸ª å¤„ç†æ¯ä¸ªèŠ‚ç‚¹   
+    if ismember(i, SCUC_data.units.bus_G)    % å¦‚æœæ˜¯å‘ç”µæœºèŠ‚ç‚¹ å†³ç­–å˜é‡åŒ…æ‹¬ åŠŸç‡ï¼Œç›¸è§’ï¼ŒåŠŸç‡çº¦æŸz
+        y{i}.PG = sdpvar(T,1); %sdpvaråˆ›å»ºå®æ•°å‹å†³ç­–å˜é‡
         y{i}.theta = sdpvar(T,1);
         y{i}.z = sdpvar(T,1);
     else
@@ -46,28 +46,28 @@ for i=1:N    % Öğ ¸ö ´¦ÀíÃ¿¸ö½Úµã
 end
 
 
-cons = [];  % ËùÓĞµÄÔ¼Êø¼¯ºÏ
+cons = [];  % æ‰€æœ‰çš„çº¦æŸé›†åˆ
 
-% °´ÕÕ½Úµã¿ªÊ¼½¨Á¢¸÷ÀàÔ¼Êø
-% Ö±Á÷³±Á÷²»µÈÊ½ Ã¿¸öÑ­»·¹¹ÔìTĞĞ²»µÈÊ½£¬×ÜµÄ¹¹ÔìÁËN*T¸ö²»µÈÊ½
+% æŒ‰ç…§èŠ‚ç‚¹å¼€å§‹å»ºç«‹å„ç±»çº¦æŸ
+% ç›´æµæ½®æµä¸ç­‰å¼ æ¯ä¸ªå¾ªç¯æ„é€ Tè¡Œä¸ç­‰å¼ï¼Œæ€»çš„æ„é€ äº†N*Tä¸ªä¸ç­‰å¼
 for i = 1:N  
-    %¹¹ÔìÖĞ¼äÏî
-    cons_PF = sparse(T,1); %Ò»¸ötÒ»¸öÔ¼Êø TĞĞÔ¼Êø
-    if ismember(i, SCUC_data.units.bus_G) %Èç¹ûiÊÇ·¢µç»ú½Úµã£¬ÔòÖĞ¼äÏîÓ¦¸Ã¼ÓÉÏPG
+    %æ„é€ ä¸­é—´é¡¹
+    cons_PF = sparse(T,1); %ä¸€ä¸ªtä¸€ä¸ªçº¦æŸ Tè¡Œçº¦æŸ
+    if ismember(i, SCUC_data.units.bus_G) %å¦‚æœiæ˜¯å‘ç”µæœºèŠ‚ç‚¹ï¼Œåˆ™ä¸­é—´é¡¹åº”è¯¥åŠ ä¸ŠPG
         cons_PF = cons_PF +  y{i}.PG;
     end
     for j = 1:N
         cons_PF = cons_PF -B(i,j) .* y{j}.theta;
-%         if ismember(j, SCUC_data.units.bus_G) && j == i   % Èç¹ûÊÇ·¢µç»ú½Úµã ËùÔÚµÄ¶Ô½Ç×Ó¾ØÕóÎ»ÖÃ
+%         if ismember(j, SCUC_data.units.bus_G) && j == i   % å¦‚æœæ˜¯å‘ç”µæœºèŠ‚ç‚¹ æ‰€åœ¨çš„å¯¹è§’å­çŸ©é˜µä½ç½®
 %             cons_PF = cons_PF +  y{j}.PG;
 %         end
     end
     
-    %¹¹ÔìÓÒ²àÏî
-    %findº¯Êı·µ»¹µÄÊÇÏÂ±êºÅ
-    index_loadNode = find(SCUC_data.busLoad.bus_PDQR==i); % ½ÚµãiÊÇ·ñÎª¸ººÉ½Úµã
+    %æ„é€ å³ä¾§é¡¹
+    %findå‡½æ•°è¿”è¿˜çš„æ˜¯ä¸‹æ ‡å·
+    index_loadNode = find(SCUC_data.busLoad.bus_PDQR==i); % èŠ‚ç‚¹iæ˜¯å¦ä¸ºè´Ÿè·èŠ‚ç‚¹
     if index_loadNode>0
-        b_tmp = SCUC_data.busLoad.node_P(:,index_loadNode); %°´ÏÂ±êÈ¡³ö¸Ã¸ººÉ½Úµã¸ºÔØ
+        b_tmp = SCUC_data.busLoad.node_P(:,index_loadNode); %æŒ‰ä¸‹æ ‡å–å‡ºè¯¥è´Ÿè·èŠ‚ç‚¹è´Ÿè½½
     else
         b_tmp = sparse(T,1);
     end
@@ -75,56 +75,56 @@ for i = 1:N
         0 <= cons_PF <= b_tmp     ];
         
 end
-% end of Ö±Á÷³±Á÷²»µÈÊ½
+% end of ç›´æµæ½®æµä¸ç­‰å¼
 
 
-% ²Î¿¼½Úµã
-%Ã¿¸öÄ£ĞÍ¶¼Ö»Éè¶¨µÚÒ»¸ö½ÚµãÎª²Î¿¼½Úµã£¿
+% å‚è€ƒèŠ‚ç‚¹
+%æ¯ä¸ªæ¨¡å‹éƒ½åªè®¾å®šç¬¬ä¸€ä¸ªèŠ‚ç‚¹ä¸ºå‚è€ƒèŠ‚ç‚¹ï¼Ÿ
 cons = [cons, ...
     y{1}.theta == sparse(T,1)      ];  
-% end of ²Î¿¼½Úµã
+% end of å‚è€ƒèŠ‚ç‚¹
 
 
-% ´¦Àí·¢µç»ú½ÚµãÔ¼Êø
+% å¤„ç†å‘ç”µæœºèŠ‚ç‚¹çº¦æŸ
 for i = 1:G
     bus_index_Gen = SCUC_data.units.bus_G(i);
-    % »ú×é³öÁ¦ÉÏÏÂ½ç
+    % æœºç»„å‡ºåŠ›ä¸Šä¸‹ç•Œ
     cons = [cons, ...
         SCUC_data.units.PG_low(i) * ones(T,1) <= y{bus_index_Gen}.PG <= SCUC_data.units.PG_up(i) * ones(T,1)     ];
     
-    % ÅÀÆÂ PupºÍPdownÏàµÈ ÇÒ²»¿¼ÂÇP0
+    % çˆ¬å¡ Pupå’ŒPdownç›¸ç­‰ ä¸”ä¸è€ƒè™‘P0
     cons = [cons, ...
         -SCUC_data.units.ramp(i) * ones(T-1,1) <= low_trianle * y{bus_index_Gen}.PG <= SCUC_data.units.ramp(i) * ones(T-1,1)  ];
     
-    % ·¢µç·ÑÓÃÏßĞÔ»¯
+    % å‘ç”µè´¹ç”¨çº¿æ€§åŒ–
     for l = 0:(L-1)
         p_i_l =SCUC_data.units.PG_low(i) +  ( SCUC_data.units.PG_up(i) - SCUC_data.units.PG_low(i) ) / L * l;
         cons = [cons, ...
             (2* p_i_l * SCUC_data.units.gamma(i) +SCUC_data.units.beta(i) ) * y{bus_index_Gen}.PG - y{bus_index_Gen}.z <= (p_i_l^2 * SCUC_data.units.gamma(i) - SCUC_data.units.alpha(i)) * ones(T,1)  ];
     end
 end
-% end of ´¦Àí·¢µç»ú½ÚµãÔ¼Êø
+% end of å¤„ç†å‘ç”µæœºèŠ‚ç‚¹çº¦æŸ
 
 
-% °´ÕÕÖ§Â·¹¹Ôì¸÷ÀàÔ¼Êø
-%ÏßÂ·³±Á÷Ô¼Êø
-for i = 1:size(all_branch.I,1) %´ÓµÚÒ»ÌõÖ§Â·¿ªÊ¼Ñ­»·±éÀúËùÓĞÖ§Â·
-    left = all_branch.I(i); %Ö§Â·ÆğµãºÍÖÕµã¼´¿ÉµÃµ½BµçÄÉ
+% æŒ‰ç…§æ”¯è·¯æ„é€ å„ç±»çº¦æŸ
+%çº¿è·¯æ½®æµçº¦æŸ
+for i = 1:size(all_branch.I,1) %ä»ç¬¬ä¸€æ¡æ”¯è·¯å¼€å§‹å¾ªç¯éå†æ‰€æœ‰æ”¯è·¯
+    left = all_branch.I(i); %æ”¯è·¯èµ·ç‚¹å’Œç»ˆç‚¹å³å¯å¾—åˆ°Bç”µçº³
     right = all_branch.J(i);
-    abs_x4branch = abs(1/B(left,right));  % µ±Ç°Ö§Â·µÄ×è¿¹µÄ¾ø¶ÔÖµ |x_ij|    
+    abs_x4branch = abs(1/B(left,right));  % å½“å‰æ”¯è·¯çš„é˜»æŠ—çš„ç»å¯¹å€¼ |x_ij|    
     cons = [ cons, ...
       -all_branch.P(i) * abs_x4branch * ones(T,1) <= y{left}.theta - y{right}.theta <= all_branch.P(i) * abs_x4branch * ones(T,1) ];  
 end
-% end of °´ÕÕÖ§Â·¹¹Ôì¸÷ÀàÔ¼Êø
+% end of æŒ‰ç…§æ”¯è·¯æ„é€ å„ç±»çº¦æŸ
 
 
-% ÏÂÃæ¼ÆËãlamdaµÄ¾ùÖµmiu_hat ¹À¼ÆÖµºÍĞ­·½²îsigema_hat ¹À¼ÆÖµ
-miu_hat_G_T = zeros(G,T); %Ã¿¸ö»ú×éÃ¿¸öÊ±¶Îµç¼Û¶¼²»Í¬£¬G*T¸ö
-for q = 1:q_line % q_line±ê¼ÇÑù±¾³¤¶È
-    miu_hat_G_T = miu_hat_G_T + reshape(lamda_q_NT(q,:,:),G,T); %°´Ñù±¾ÊıqÒÀ´ÎÀÛ¼Ó G*T¾ØÕóĞÍµÄµç¼Û
+% ä¸‹é¢è®¡ç®—lamdaçš„å‡å€¼miu_hat ä¼°è®¡å€¼å’Œåæ–¹å·®sigema_hat ä¼°è®¡å€¼
+miu_hat_G_T = zeros(G,T); %æ¯ä¸ªæœºç»„æ¯ä¸ªæ—¶æ®µç”µä»·éƒ½ä¸åŒï¼ŒG*Tä¸ª
+for q = 1:q_line % q_lineæ ‡è®°æ ·æœ¬é•¿åº¦
+    miu_hat_G_T = miu_hat_G_T + reshape(lamda_q_NT(q,:,:),G,T); %æŒ‰æ ·æœ¬æ•°qä¾æ¬¡ç´¯åŠ  G*TçŸ©é˜µå‹çš„ç”µä»·
 end
 miu_hat_G_T = 1/q_line * miu_hat_G_T;
-miu_hat = reshape(miu_hat_G_T',G*T,1); %°´Ã¿¸ö»ú×éËùÓĞÊ±¶ÎÅÅÁĞÎªÁĞÏòÁ¿
+miu_hat = reshape(miu_hat_G_T',G*T,1); %æŒ‰æ¯ä¸ªæœºç»„æ‰€æœ‰æ—¶æ®µæ’åˆ—ä¸ºåˆ—å‘é‡
 
 Sigma_hat = zeros(G*T,G*T);
 for q = 1:q_line
@@ -134,36 +134,36 @@ for q = 1:q_line
 end
 Sigma_hat = 1/q_line * Sigma_hat;
 Sigma_hat_neg_half = Sigma_hat^(-1/2);
-% end of ¾ùÖµ Ğ­·½²î¼ÆËã
+% end of å‡å€¼ åæ–¹å·®è®¡ç®—
 
-% ¹¹ÔìÄ£ºı¼¯S G*TÎ¬µÄÁĞÏòÁ¿£¬°´Ã¿¸öGËùÓĞÊ±¶ÎÅÅÁĞ
-tmp = max(lamda_q_NT,[],1); %È¡¸÷¸öÊ±¶Î£¬ËùÓĞÑù±¾ÖĞG¸ö»ú×éµÄ×î´óÖµ
+% æ„é€ æ¨¡ç³Šé›†S G*Tç»´çš„åˆ—å‘é‡ï¼ŒæŒ‰æ¯ä¸ªGæ‰€æœ‰æ—¶æ®µæ’åˆ—
+tmp = max(lamda_q_NT,[],1); %å–å„ä¸ªæ—¶æ®µï¼Œæ‰€æœ‰æ ·æœ¬ä¸­Gä¸ªæœºç»„çš„æœ€å¤§å€¼
 tmp = reshape(tmp,G,T)';
-lamda_positive = reshape(tmp, G*T,1);  % ¼ÆËã lamdaÕı
+lamda_positive = reshape(tmp, G*T,1);  % è®¡ç®— lamdaæ­£
 tmp = min(lamda_q_NT,[],1);
 tmp = reshape(tmp,G,T)';
-lamda_negative = reshape(tmp, G*T,1);  % ¼ÆËã lamda¸º
+lamda_negative = reshape(tmp, G*T,1);  % è®¡ç®— lamdaè´Ÿ
 A = [sparse(1:G*T,1:G*T,1); -sparse(1:G*T,1:G*T,1)];
 B = [lamda_positive; -lamda_negative ];
-% end of ¹¹ÔìÄ£ºı¼¯S
+% end of æ„é€ æ¨¡ç³Šé›†S
 
 % chol(Sigma_hat);
 
-% ÏòÁ¿·Ö½â
+% å‘é‡åˆ†è§£
 [eig_vector,eig_value] = eig(Sigma_hat);
 left_value = (eig_vector * eig_value^(-1/2))';
 
-%¹¹Ôìgama
-qline = 200000000;
-deta = 0.20; %¦ÄÔÚ0£¬1Ö®¼äÈÎÈ¡
+%æ„é€ gama
+qline = 2000;
+deta = 0.20; %Î´åœ¨0ï¼Œ1ä¹‹é—´ä»»å–
 deta_bar = 1 - sqrt(1-deta);
 
-%  R ?=max©Ğ(¦Ë¡ÊS)?¡¬¦² ?^(-1?2) (¦Ë-¦Ì ? )¡¬
+%  R ?=maxâ”¬(Î»âˆˆS)?â€–Î£ ?^(-1?2) (Î»-Î¼ ? )â€–
 part1 = abs(Sigma_hat_neg_half * (lamda_positive - miu_hat ));
 part2 = abs(Sigma_hat_neg_half * (lamda_negative - miu_hat ));
 part1 = norm(part1);
 part2 = norm(part2);
-R_hat = max(part2, part1)/10;    %  R ?=max©Ğ(¦Ë¡ÊS)?¡¬¦² ?^(-1?2) (¦Ë-¦Ì ? )¡¬
+R_hat = max(part2, part1)/10;    %  R ?=maxâ”¬(Î»âˆˆS)?â€–Î£ ?^(-1?2) (Î»-Î¼ ? )â€–
 
 R_bar = R_hat * (1-(R_hat^2 + 2) * ( (2+sqrt(2*log(4/deta_bar))) / sqrt(qline) )   )^(-1/2) ;
 
@@ -173,15 +173,15 @@ M_hat = max( (R_hat^2 + 2)^2 * (2 + sqrt(2* log(4/deta_bar)))^2  , (8+sqrt(32*lo
 
 gamma_bar_1 = b_hua_bar/(1- a_hua_bar - b_hua_bar);
 gamma_bar_2 = (1+b_hua_bar)/(1- a_hua_bar - b_hua_bar);
-% end of ¹¹Ôìgama
+% end of æ„é€ gama
 
 
-%¿ªÊ¼ÇĞ·Ö ¸ù¾İÎ¬¶ÈÇó¶ÎÊıÔÙÏòÉÏÈ¡Õû»á±È½ÏºÃ
-mi = (G*T)/2; %¶¨ÒåÎ¬¶È
-P = (G*T)/mi;%¶¨ÒåÇĞ·Ö¶ÎÊı
+%å¼€å§‹åˆ‡åˆ† æ ¹æ®ç»´åº¦æ±‚æ®µæ•°å†å‘ä¸Šå–æ•´ä¼šæ¯”è¾ƒå¥½
+mi = (G*T)/2; %å®šä¹‰ç»´åº¦
+P = (G*T)/mi;%å®šä¹‰åˆ‡åˆ†æ®µæ•°
 
-%¿ªÊ¼¹¹ÔìµÚÒ»¸ö½üËÆÄ£ĞÍ£¬ÆäÖĞ±äÁ¿ÅÅÁĞÎª£ºy(°üÀ¨P,theta, z), alpha,Q,q,r,t,tao1,tao2
-%±äÁ¿¶¨Òå
+%å¼€å§‹æ„é€ ç¬¬ä¸€ä¸ªè¿‘ä¼¼æ¨¡å‹ï¼Œå…¶ä¸­å˜é‡æ’åˆ—ä¸ºï¼šy(åŒ…æ‹¬P,theta, z), alpha,Q,q,r,t,tao1,tao2
+%å˜é‡å®šä¹‰
 alpha_CVaR = sdpvar(1);
 Q = sdpvar(G*T, G*T);
 q = sdpvar(G*T,1);
@@ -192,7 +192,7 @@ tao2 = sdpvar(2*G*T, 1);
 au_1 = sdpvar(P, 1);
 au_2 = sdpvar(P, 1);
 
-%²»º¬Ëæ»ú±äÁ¿µÄÔ¼Êø
+%ä¸å«éšæœºå˜é‡çš„çº¦æŸ
 Constraints = [];
 Constraints = [Constraints, tao1>=0, tao2>=0];  
 Constraints = [Constraints,cons];
@@ -205,9 +205,9 @@ for i = 1:P
    Constraints = [Constraints, Q((i-1)*mi+1:i*mi,(i-1)*mi+1:i*mi)>=0]; %Q>=0
 end
 Constraints = [Constraints, t >= acce + sqrt(gamma_bar_1) * norm(q)];
-%end of ²»º¬Ëæ»ú±äÁ¿µÄÔ¼Êø
+%end of ä¸å«éšæœºå˜é‡çš„çº¦æŸ
 
-%Ëæ»ú±äÁ¿Ô¼Êø1
+%éšæœºå˜é‡çº¦æŸ1
 for i = 1:P
 %     au_1(i) = r - alpha_CVaR - tao1'*B + tao1'* A *miu_hat;
     omg_1 = q(((i-1)*mi+1:i*mi))' + tao1'* A *eig_vector(:,(i-1)*mi+1:i*mi)*(eig_value((i-1)*mi+1:i*mi,(i-1)*mi+1:i*mi)^(1/2));
@@ -218,18 +218,18 @@ for i = 1:P
 end
 
 Constraints = [Constraints, sum(au_1) == r - alpha_CVaR - tao1'*B + tao1'* A *miu_hat ]; 
-%end of Ëæ»ú±äÁ¿Ô¼Êø1
+%end of éšæœºå˜é‡çº¦æŸ1
 
-%¹²ÓÃ³£Á¿¼ÆËã
+%å…±ç”¨å¸¸é‡è®¡ç®—
 sum_z = 0;
-P_vector = []; %ĞÎÈç[p11 p12 ...p1t;p21...p2t...pnt]µÄÁĞÏòÁ¿
+P_vector = []; %å½¢å¦‚[p11 p12 ...p1t;p21...p2t...pnt]çš„åˆ—å‘é‡
 for g = 1:G
     sum_z = sum_z +sum( y{SCUC_data.units.bus_G(g)}.z );
-    P_vector = [P_vector;  y{SCUC_data.units.bus_G(g)}.PG  ]; %ÁĞÏòÁ¿ÓÃ;·Ö¸ô
+    P_vector = [P_vector;  y{SCUC_data.units.bus_G(g)}.PG  ]; %åˆ—å‘é‡ç”¨;åˆ†éš”
 end
-%end of ¹²ÓÃ³£Á¿¼ÆËã
+%end of å…±ç”¨å¸¸é‡è®¡ç®—
 
-% Ëæ»ú±äÁ¿Ô¼Êø2
+% éšæœºå˜é‡çº¦æŸ2
 for i = 1:P
     omg_21 =  q(((i-1)*mi+1:i*mi))' + tao2'*A*eig_vector(:,(i-1)*mi+1:i*mi)*(eig_value((i-1)*mi+1:i*mi,(i-1)*mi+1:i*mi)^(1/2));
     omg_22 =  1 / (1-beta_CVaR) * (P_vector' * eig_vector(:,(i-1)*mi+1:i*mi) * (eig_value((i-1)*mi+1:i*mi,(i-1)*mi+1:i*mi)^(1/2))) ;
@@ -241,7 +241,7 @@ for i = 1:P
 end
 
 Constraints = [Constraints, sum(au_2) == (r + 1 / (1-beta_CVaR) * (beta_CVaR * alpha_CVaR - sum_z + P_vector'* miu_hat) - tao2' * B + tao2'*A*miu_hat) ]; 
-% end of Ëæ»ú±äÁ¿Ô¼Êø2
+% end of éšæœºå˜é‡çº¦æŸ2
 
 Objective =  r + t;
 % Objective = sum_z;
@@ -259,7 +259,7 @@ sol = optimize(Constraints,Objective,options);
 if sol.problem == 0
     % Extract and display value
 
-%     %Êä³öµ÷¶È·½°¸
+%     %è¾“å‡ºè°ƒåº¦æ–¹æ¡ˆ
 %     for i=1:N  
 %         if ismember(i, SCUC_data.units.bus_G) 
 %             disp(i);
@@ -273,7 +273,7 @@ if sol.problem == 0
 %     end
     disp(value(Objective));
 
-    %Êä³ö·¢µç·ÑÓÃ
+    %è¾“å‡ºå‘ç”µè´¹ç”¨
     cost = P_vector' * miu_hat - sum_z;
     disp(value(cost));
     
