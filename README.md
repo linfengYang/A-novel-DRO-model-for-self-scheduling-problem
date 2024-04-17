@@ -25,7 +25,7 @@ What about this project/study?
 User Guide
 -----------
 
-The description of implement code files  (函数文件说明)
+The description of implement code files 
 
     DRO_CVaR_Alg1 : The DRO model.  
     
