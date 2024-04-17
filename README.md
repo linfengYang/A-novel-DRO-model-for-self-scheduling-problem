@@ -61,13 +61,14 @@ Prerequisite:
 
 Publication:
 -----------
-    If you use our study in academic work then please consider citing our papers.
+    If you find our paper/code is useful to you, please cite it:
+    L. Yang, Y. Yang, G. Chen and Z. Dong, "Distributionally Robust Framework and its Approximations Based on Vector and Region Split for Self-Scheduling of Generation Companies," in IEEE Transactions on Industrial Informatics, vol. 18, no. 8, pp. 5231-5241, Aug. 2022, doi: 10.1109/TII.2021.3125964.
 
 
 
 
 About Us 
 -----------
-    Authors：Lingfeng Yang (ylf@gxu.edu.cn),Ying Yang (907803678@qq.com),Guo Chen,Zhaoyang Dong
+    Authors：Lingfeng Yang (ylf@gxu.edu.cn),Ying Yang (yingyoung1997@gmail.com),Guo Chen,Zhaoyang Dong
     Team：www.scholat.com/team/eidp
     Webpage: http://jians.gxu.edu.cn/default.do
