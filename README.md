@@ -63,9 +63,9 @@ Publication:
 -----------
     If you find our paper/code is useful to you, please cite it:
     "L. Yang, Y. Yang, G. Chen and Z. Dong, 'Distributionally Robust Framework and its Approximations 
-    Based on Vector and Region Split for Self-Scheduling of Generation Companies,' in 
-    IEEE Transactions on Industrial Informatics, vol. 18, no. 8, pp. 5231-5241, 
-    Aug. 2022, doi: 10.1109/TII.2021.3125964."
+    Based on Vector and Region Split for Self-Scheduling of Generation Companies,' 
+    in IEEE Transactions on Industrial Informatics, vol. 18, no. 8, pp. 5231-5241, Aug. 2022, 
+    doi: 10.1109/TII.2021.3125964."
 
 
 
